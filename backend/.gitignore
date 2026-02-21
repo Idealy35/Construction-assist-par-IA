@@ -1,0 +1,27 @@
+
+###> symfony/framework-bundle ###
+/.env
+/.env.*
+/.env.local
+/.env.local.php
+/config/secrets/prod/prod.decrypt.private.php
+/config/jwt/
+/config/openssl.cnf
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###
+
+###> node / build tools ###
+/node_modules/
+###< node / build tools ###

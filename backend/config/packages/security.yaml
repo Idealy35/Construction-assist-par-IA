@@ -1,0 +1,77 @@
+# backend/config/packages/security.yaml
+security:
+    # ------------------------------------
+    # 1. HASHAGE DU MOT DE PASSE
+    # ------------------------------------
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # ------------------------------------
+    # 2. FOURNISSEUR D'UTILISATEURS (Doctrine)
+    # ------------------------------------
+    providers:
+        # Ceci est le fournisseur standard qui charge les utilisateurs depuis la base de données
+        app_user_provider:
+            entity:
+                class: App\Entity\Utilisateur # DOIT correspondre à votre classe d'entité
+                property: email # Le champ utilisé pour l'identification (login)
+
+    # ------------------------------------
+    # 3. FIREWALLS (GESTION DES REQUÊTES)
+    # ------------------------------------
+    firewalls:
+        dev:
+            pattern: ^/(_profiler|_wdt|css|images|js)/
+            security: false
+
+        # A. FIREWALL 'login' : Gère l'échange des identifiants contre le Token JWT
+        login:
+            pattern: ^/api/login_check
+            stateless: true # API REST
+            json_login:
+                check_path: /api/login_check # La route vers le SecurityController
+                username_path: email        # Le champ attendu dans le JSON de React
+                password_path: password     # Le champ attendu dans le JSON de React
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        # Firewall spécifique: désactive la sécurité pour les routes IA en développement
+        ia_dev:
+            pattern: ^/api/ia
+            stateless: true
+            security: false
+
+        # Firewall spécifique: désactive la sécurité pour le dev_login
+        dev_login:
+            pattern: ^/api/dev_login
+            stateless: true
+            security: false
+
+        dev_signup:
+            pattern: ^/api/dev_signup
+            stateless: true
+            security: false
+
+        # B. FIREWALL 'api' : Protège toutes les autres routes API
+        api:
+            pattern: ^/api
+            stateless: true # API REST
+            jwt: ~ # Active l'authentification par Token JWT pour ce chemin
+            provider: app_user_provider # Utilise votre provider Doctrine
+            
+        # Supprimez le firewall 'main' par défaut, car nous utilisons l'API JWT
+
+    # ------------------------------------
+    # 4. CONTRÔLE D'ACCÈS
+    # ------------------------------------
+    access_control:
+        - { path: ^/api/dev_login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/dev_signup, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
+        - { path: ^/api/ia, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+
+when@test:
+    security:
+        # ... (Gardez la configuration de test sans la modifier)
