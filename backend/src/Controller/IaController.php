@@ -31,6 +31,8 @@ class IaController extends AbstractController
     #[Route('/api/ia/chat', name: 'api_ia_chat_multimodal', methods: ['POST'])]
     public function chat(Request $request, GeminiApiService $geminiService): Response
     {
+        // Augmenter le temps d'exécution car l'IA peut être lente (surtout avec des images)
+        set_time_limit(90);
 
         // Récupération des données depuis le FormData
         $prompt = (string)$request->request->get('prompt', '');
@@ -162,6 +164,9 @@ class IaController extends AbstractController
     #[Route('/api/ia/describe-plan', name: 'api_ia_describe_plan', methods: ['POST'])]
     public function describePlan(Request $request, GeminiApiService $geminiService): Response
     {
+        // Augmenter le temps d'exécution car l'IA peut être lente (surtout avec des images)
+        set_time_limit(90);
+
         /** @var UploadedFile|null $imageFile */
         $imageFile = $request->files->get('image');
         $language = $request->request->get('language', 'fr');

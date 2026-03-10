@@ -7,6 +7,9 @@ use Symfony\Component\Dotenv\Dotenv;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+// Augmenter le délai d'exécution global pour Windows / Dev
+set_time_limit(120);
+
 $dotenv = new Dotenv();
 $dotenv->bootEnv(dirname(__DIR__) . '/.env');
 
