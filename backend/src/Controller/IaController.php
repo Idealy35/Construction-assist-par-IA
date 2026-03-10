@@ -82,6 +82,7 @@ class IaController extends AbstractController
                 if ($env === 'dev') {
                     $payload['debug'] = [
                         'service_error' => $geminiResponse['error'],
+                        'error_message' => $geminiResponse['message'] ?? 'Unknown error',
                     ];
                 }
                 return $this->json($payload, Response::HTTP_OK);

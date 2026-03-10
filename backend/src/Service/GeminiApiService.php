@@ -104,6 +104,7 @@ class GeminiApiService
 
         } catch (\Throwable $e) {
             // Log de l'erreur réelle pour le développeur
+            error_log("Gemini API Error: " . $e->getMessage());
             return [
                 'error' => true,
                 'message' => $e->getMessage(),
